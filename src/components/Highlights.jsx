@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import { useMediaQuery } from "react-responsive";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
@@ -6,6 +7,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 gsap.registerPlugin(ScrollTrigger);
 
 const Highlights = () => {
+  const containerRef = useRef(null);
   const isMobile = useMediaQuery({ query: "(max-width: 1024px)" });
 
   useGSAP(
@@ -28,23 +30,25 @@ const Highlights = () => {
           ease: "power1.inOut",
         }
       );
+
+      ScrollTrigger.refresh();
     },
-    { dependencies: [isMobile] }
+    { scope: containerRef, dependencies: [isMobile] }
   );
 
   return (
-    <section id="highlights">
+    <section id="highlights" ref={containerRef}>
       <h2>There’s never been a better time to upgrade.</h2>
       <h3>Here’s what you get with the new MacBook Pro.</h3>
 
       <div className="masonry">
         <div className="left-column">
-          <div>
+          <div className="highlight-card">
             <img src="/laptop.png" alt="Laptop" />
             <p>Fly through demanding tasks up to 9.8x faster.</p>
           </div>
 
-          <div>
+          <div className="highlight-card">
             <img src="/sun.png" alt="Sun" />
             <p>
               A stunning <br />
@@ -55,7 +59,7 @@ const Highlights = () => {
         </div>
 
         <div className="right-column">
-          <div className="apple-gradient">
+          <div className="highlight-card apple-gradient">
             <img src="/ai.png" alt="AI" />
             <p>
               Built for <br />
@@ -63,16 +67,13 @@ const Highlights = () => {
             </p>
           </div>
 
-          <div>
+          <div className="highlight-card">
             <img src="/battery.png" alt="Battery" />
             <p>
               Up to
               <span className="green-gradient"> 14 more hours </span>
               battery life.
-              <span className="text-dark-100">
-                {" "}
-                (Up to 24 hours total.)
-              </span>
+              <span className="text-dark-100"> (Up to 24 hours total.)</span>
             </p>
           </div>
         </div>
