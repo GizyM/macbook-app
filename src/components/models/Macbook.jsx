@@ -1,50 +1,138 @@
-import React, {useEffect} from 'react'
-import {useGLTF, useVideoTexture} from '@react-three/drei'
+import React, { useEffect, useMemo } from "react";
+import { useGLTF, useVideoTexture } from "@react-three/drei";
 import useMacbookStore from "../../store/index.js";
-import {noChangeParts} from "../../constants/index.js";
-import {Color} from "three";
+import { noChangeParts } from "../../constants/index.js";
+import { Color, MeshStandardMaterial } from "three";
 
 export default function MacbookModel(props) {
-    const { color, texture, } = useMacbookStore();
-  const { nodes, materials, scene} = useGLTF('/models/macbook-transformed.glb')
+  const { color, texture } = useMacbookStore();
 
-    const screen = useVideoTexture(texture)
+  const { nodes, materials, scene } = useGLTF(
+    "/models/macbook-transformed.glb"
+  );
 
-    useEffect(() => {
-        scene.traverse((child) => {
-            if (child.isMesh) {
-                if (!noChangeParts.includes(child.name)) {
-                    child.material.color = new Color(color);
-                }
-            }
-        });
-    }, [color, scene]);
+  const screenTexture = useVideoTexture(texture || "/videos/feature-1.mp4", {
+    muted: true,
+    loop: true,
+    start: true,
+    playsInline: true,
+  });
+
+  const bodyColor = useMemo(() => new Color(color), [color]);
+
+  useEffect(() => {
+    scene.traverse((child) => {
+      if (!child.isMesh) return;
+      if (noChangeParts.includes(child.name)) return;
+
+      child.material = child.material.clone();
+
+      if (child.material.color) {
+        child.material.color.copy(bodyColor);
+        child.material.needsUpdate = true;
+      }
+    });
+  }, [bodyColor, scene]);
 
   return (
     <group {...props} dispose={null}>
-      <mesh geometry={nodes.Object_10.geometry} material={materials.PaletteMaterial001} rotation={[Math.PI / 2, 0, 0]} />
-      <mesh geometry={nodes.Object_16.geometry} material={materials.zhGRTuGrQoJflBD} rotation={[Math.PI / 2, 0, 0]} />
-      <mesh geometry={nodes.Object_20.geometry} material={materials.PaletteMaterial002} rotation={[Math.PI / 2, 0, 0]} />
-      <mesh geometry={nodes.Object_22.geometry} material={materials.lmWQsEjxpsebDlK} rotation={[Math.PI / 2, 0, 0]} />
-      <mesh geometry={nodes.Object_30.geometry} material={materials.LtEafgAVRolQqRw} rotation={[Math.PI / 2, 0, 0]} />
-      <mesh geometry={nodes.Object_32.geometry} material={materials.iyDJFXmHelnMTbD} rotation={[Math.PI / 2, 0, 0]} />
-      <mesh geometry={nodes.Object_34.geometry} material={materials.eJObPwhgFzvfaoZ} rotation={[Math.PI / 2, 0, 0]} />
-      <mesh geometry={nodes.Object_38.geometry} material={materials.nDsMUuDKliqGFdU} rotation={[Math.PI / 2, 0, 0]} />
-      <mesh geometry={nodes.Object_42.geometry} material={materials.CRQixVLpahJzhJc} rotation={[Math.PI / 2, 0, 0]} />
-      <mesh geometry={nodes.Object_48.geometry} material={materials.YYwBgwvcyZVOOAA} rotation={[Math.PI / 2, 0, 0]} />
-      <mesh geometry={nodes.Object_54.geometry} material={materials.SLGkCohDDelqXBu} rotation={[Math.PI / 2, 0, 0]} />
-      <mesh geometry={nodes.Object_58.geometry} material={materials.WnHKXHhScfUbJQi} rotation={[Math.PI / 2, 0, 0]} />
-      <mesh geometry={nodes.Object_66.geometry} material={materials.fNHiBfcxHUJCahl} rotation={[Math.PI / 2, 0, 0]} />
-      <mesh geometry={nodes.Object_74.geometry} material={materials.LpqXZqhaGCeSzdu} rotation={[Math.PI / 2, 0, 0]} />
-      <mesh geometry={nodes.Object_82.geometry} material={materials.gMtYExgrEUqPfln} rotation={[Math.PI / 2, 0, 0]} />
-      <mesh geometry={nodes.Object_96.geometry} material={materials.PaletteMaterial003} rotation={[Math.PI / 2, 0, 0]} />
-      <mesh geometry={nodes.Object_107.geometry} material={materials.JvMFZolVCdpPqjj} rotation={[Math.PI / 2, 0, 0]} />
-      <mesh geometry={nodes.Object_123.geometry} rotation={[Math.PI / 2, 0, 0]}>
-          <meshBasicMaterial map={screen} />
+      <mesh
+        geometry={nodes.Object_10?.geometry}
+        material={materials.PaletteMaterial001}
+        rotation={[Math.PI / 2, 0, 0]}
+      />
+      <mesh
+        geometry={nodes.Object_16?.geometry}
+        material={materials.zhGRTuGrQoJflBD}
+        rotation={[Math.PI / 2, 0, 0]}
+      />
+      <mesh
+        geometry={nodes.Object_20?.geometry}
+        material={materials.PaletteMaterial002}
+        rotation={[Math.PI / 2, 0, 0]}
+      />
+      <mesh
+        geometry={nodes.Object_22?.geometry}
+        material={materials.lmWQsEjxpsebDlK}
+        rotation={[Math.PI / 2, 0, 0]}
+      />
+      <mesh
+        geometry={nodes.Object_30?.geometry}
+        material={materials.LtEafgAVRolQqRw}
+        rotation={[Math.PI / 2, 0, 0]}
+      />
+      <mesh
+        geometry={nodes.Object_32?.geometry}
+        material={materials.iyDJFXmHelnMTbD}
+        rotation={[Math.PI / 2, 0, 0]}
+      />
+      <mesh
+        geometry={nodes.Object_34?.geometry}
+        material={materials.eJObPwhgFzvfaoZ}
+        rotation={[Math.PI / 2, 0, 0]}
+      />
+      <mesh
+        geometry={nodes.Object_38?.geometry}
+        material={materials.nDsMUuDKliqGFdU}
+        rotation={[Math.PI / 2, 0, 0]}
+      />
+      <mesh
+        geometry={nodes.Object_42?.geometry}
+        material={materials.CRQixVLpahJzhJc}
+        rotation={[Math.PI / 2, 0, 0]}
+      />
+      <mesh
+        geometry={nodes.Object_48?.geometry}
+        material={materials.YYwBgwvcyZVOOAA}
+        rotation={[Math.PI / 2, 0, 0]}
+      />
+      <mesh
+        geometry={nodes.Object_54?.geometry}
+        material={materials.SLGkCohDDelqXBu}
+        rotation={[Math.PI / 2, 0, 0]}
+      />
+      <mesh
+        geometry={nodes.Object_58?.geometry}
+        material={materials.WnHKXHhScfUbJQi}
+        rotation={[Math.PI / 2, 0, 0]}
+      />
+      <mesh
+        geometry={nodes.Object_66?.geometry}
+        material={materials.fNHiBfcxHUJCahl}
+        rotation={[Math.PI / 2, 0, 0]}
+      />
+      <mesh
+        geometry={nodes.Object_74?.geometry}
+        material={materials.LpqXZqhaGCeSzdu}
+        rotation={[Math.PI / 2, 0, 0]}
+      />
+      <mesh
+        geometry={nodes.Object_82?.geometry}
+        material={materials.gMtYExgrEUqPfln}
+        rotation={[Math.PI / 2, 0, 0]}
+      />
+      <mesh
+        geometry={nodes.Object_96?.geometry}
+        material={materials.PaletteMaterial003}
+        rotation={[Math.PI / 2, 0, 0]}
+      />
+      <mesh
+        geometry={nodes.Object_107?.geometry}
+        material={materials.JvMFZolVCdpPqjj}
+        rotation={[Math.PI / 2, 0, 0]}
+      />
+
+      <mesh geometry={nodes.Object_123?.geometry} rotation={[Math.PI / 2, 0, 0]}>
+        <meshBasicMaterial map={screenTexture} toneMapped={false} />
       </mesh>
-      <mesh geometry={nodes.Object_127.geometry} material={materials.ZCDwChwkbBfITSW} rotation={[Math.PI / 2, 0, 0]} />
+
+      <mesh
+        geometry={nodes.Object_127?.geometry}
+        material={materials.ZCDwChwkbBfITSW}
+        rotation={[Math.PI / 2, 0, 0]}
+      />
     </group>
-  )
+  );
 }
 
-useGLTF.preload('/models/macbook-transformed.glb')
+useGLTF.preload("/models/macbook-transformed.glb");
